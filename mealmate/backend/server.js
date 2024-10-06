@@ -4,8 +4,13 @@ const connectDB = require('./db');
 
 const userRoute = require('./routes/userRoute');
 
+const cors = require('cors');
+
 const app = express();
 const port = 5000; // Backend will run on port 5000
+
+// cor policy fix [JIRA: BAC-7]
+app.use(cors());
 
 // Middleware
 app.use(express.json()); // Parse JSON bodies

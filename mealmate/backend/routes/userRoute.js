@@ -1,10 +1,18 @@
 const express = require('express');
+
+// routes
 const router = express.Router();
+
+// password encryption
 const bcrypt = require('bcryptjs');
+
+// auth
+const jwt = require('jsonwebtoken');
+
 const User = require('../models/User');
 
+// Signup Route
 // @route POST /api/users/signup
-
 router.post('/signup', async (req, res) => {
     const { name, email, password, lat, lng, role } = req.body;
 
@@ -12,7 +20,7 @@ router.post('/signup', async (req, res) => {
         // Check if the user already exists
         let user = await User.findOne({ email });
         if (user) {
-          return res.status(400).json({ message: 'User already exists' });
+            return res.status(400).json({ message: 'User already exists' });
         }
 
         // Create a new user
@@ -26,7 +34,35 @@ router.post('/signup', async (req, res) => {
 
         await user.save();
         res.status(201).json({ message: 'User created successfully', user });
-    } 
+    }
+    catch (error) {
+        console.error(error.message);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// Login route
+// @route POST /api/users/login
+router.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        // Check if the user exists
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ message: 'Invalid email or password' });
+        }
+
+        // Compare password
+        const isMatch = await bcrypt.compare(password, user.password_hash);
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Invalid email or password' });
+        }
+        // Generate JWT token
+        const token = jwt.sign({ userId: user._id, email: user.email }, 'your_jwt_secret', { expiresIn: '1h' });
+
+        res.json({ token, email: user.email });
+    }
     catch (error) {
         console.error(error.message);
         res.status(500).json({ message: 'Server error' });
