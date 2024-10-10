@@ -3,6 +3,8 @@ const express = require('express');
 const connectDB = require('./db');
 
 const userRoute = require('./routes/userRoute');
+const requestRoutes = require('./routes/requestRoute');
+
 
 const cors = require('cors');
 
@@ -20,6 +22,8 @@ connectDB();
 
 // Define routes
 app.use('/api/users', userRoute);
+app.use('/api', requestRoutes);
+
 
 app.get('/api', (req, res) => {
   res.send('Hello from the backend!');
