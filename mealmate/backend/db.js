@@ -1,10 +1,6 @@
 // const mongoose = require('mongoose')
 
-// // Option A: Use MongoDB Atlas (cloud)
 // // const mongoURI = 'mongodb+srv://<username>:<password>@cluster0.mongodb.net/myDatabase?retryWrites=true&w=majority';
-
-// // Option B: Use MongoDB locally
-// const mongoURI = 'mongodb://MealMate/mealmate'; // Replace 'myDatabase' with your DB name
 
 // mongoose.connect(mongoURI, {useNewUrlParser: true, useUnifiedToplogy: true})
 // .then(() => {console.log('MongoDB Connected');})

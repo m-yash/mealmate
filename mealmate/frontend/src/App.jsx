@@ -8,7 +8,7 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <h1>React and Node.js Setup</h1>
+        <h1>MealMate</h1>
         <Routes>
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />

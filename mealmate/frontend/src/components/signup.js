@@ -23,7 +23,7 @@ const Signup = () => {
     try {
       const response = await axios.post('http://localhost:5000/api/users/signup', formData);
       console.log('User signed up successfully:', response.data);
-      // You can redirect or show a success message here
+      // redirect user late from here
     } catch (error) {
       console.error('There was an error signing up the user:', error.response?.data || error.message);
     }

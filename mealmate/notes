@@ -1,0 +1,13 @@
+User -
+Will signup and login
+Will post food request (location radius based)
+Will receive requests from chef (for the food request made) 
+Will accept any one chef
+Will rate the chef (not sure about this)
+
+
+Chef -
+Will signup and login
+Will see list of food requests from user
+Will send requests to the users (who has sent the food request)
+Will recieve the acceptance from the user who selects them

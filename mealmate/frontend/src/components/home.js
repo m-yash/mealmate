@@ -36,7 +36,7 @@ const Home = () => {
       },
       body: JSON.stringify({
         ...formData,
-        user_email: email,  // Include the email in the request
+        user_email: email,  // Including the email in the request
       }),
     });
 
