@@ -16,7 +16,7 @@ const UserSchema = new mongoose.Schema({
     required: true,
   },
   phone: {
-    type: String, 
+    type: Number, 
     required: true,
   },
   location: {
@@ -35,13 +35,13 @@ const UserSchema = new mongoose.Schema({
     required: true,
   },
   // Fields for chefs only
-  availability: {
-    type: Boolean,
-    default: false,
-    required: function() {
-      return this.role === 'chef';
-    },
-  },
+  // availability: {
+  //   type: Boolean,
+  //   default: false,
+  //   required: function() {
+  //     return this.role === 'chef';
+  //   },
+  // },
   food_handling_certificates: {
     type: [String],  // Array to store multiple certificate URLs
     required: function() {

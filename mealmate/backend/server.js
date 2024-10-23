@@ -3,6 +3,8 @@ const express = require('express');
 const connectDB = require('./db');
 
 const userRoute = require('./routes/userRoute');
+const chefRoute = require('./routes/chefRoute');
+
 const requestRoutes = require('./routes/requestRoute');
 
 
@@ -21,7 +23,8 @@ app.use(express.json()); // Parse JSON bodies
 connectDB();
 
 // Define routes
-app.use('/api/users', userRoute);
+app.use('/user', userRoute);
+app.use('/chef', chefRoute);
 app.use('/api', requestRoutes);
 
 
