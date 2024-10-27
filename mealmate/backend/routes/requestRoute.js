@@ -7,7 +7,8 @@ const Request = require('../models/Request');
 // to fetch user_id of the logged in user
 const User = require('../models/User');
 
-router.post('/requests', async (req, res) => {
+// to save a new user request
+router.post('/new-request', async (req, res) => {
   try {
     const { user_email, food_preference, date, location } = req.body;
 
@@ -34,6 +35,17 @@ router.post('/requests', async (req, res) => {
     res.status(200).json({ message: 'Request submitted successfully!' });
   } catch (err) {
     res.status(500).json({ message: 'Server Error', error: err.message });
+  }
+});
+
+// to fetch the saved requests
+router.get('/all-request', async (req, res) => {
+  try {
+    const requests = await Request.find().populate('user_id', 'name');
+    res.json(requests);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Failed to retrieve requests' });
   }
 });
 

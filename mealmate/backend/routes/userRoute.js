@@ -17,8 +17,8 @@ const User = require('../models/User');
 
 // Signup Route
 // @route POST /api/users/signup
-router.post('/signup', async (req, res) => {
-    const { name, email, password, lat, lng, role } = req.body;
+router.post('/create-account', async (req, res) => {
+    const { name, email, password, phone, lat, lng, role } = req.body;
 
     try {
         // Check if the user already exists
@@ -32,6 +32,7 @@ router.post('/signup', async (req, res) => {
             name,
             email,
             password_hash: await bcrypt.hash(password, 10),  // Hash the password
+            phone,
             location: { lat, lng },
             role,
         });

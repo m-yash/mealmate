@@ -14,7 +14,7 @@ const app = express();
 const port = 5000; // Backend will run on port 5000
 
 // cor policy fix [JIRA: BAC-7]
-app.use(cors());
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
 // Middleware
 app.use(express.json()); // Parse JSON bodies
@@ -25,7 +25,7 @@ connectDB();
 // Define routes
 app.use('/user', userRoute);
 app.use('/chef', chefRoute);
-app.use('/api', requestRoutes);
+app.use('/request', requestRoutes);
 
 
 app.get('/api', (req, res) => {
