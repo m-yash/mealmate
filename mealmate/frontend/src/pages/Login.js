@@ -26,11 +26,12 @@ function Login() {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:5000/user/login', formData);
-      const { token, email } = response.data;
+      const { token, email, user_id} = response.data;
 
-      // Store token and email in localStorage
+      // Store token, email and user_id in localStorage
       localStorage.setItem('token', token);
       localStorage.setItem('email', email);
+      localStorage.setItem('user_id', user_id);
 
       // Redirect to dashboard
       history.push('/app');

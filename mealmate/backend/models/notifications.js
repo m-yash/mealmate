@@ -1,3 +1,4 @@
+// remove chef model
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -5,26 +6,59 @@ const NotificationSchema = new Schema({
   request_id: {
     type: Schema.Types.ObjectId,
     ref: 'Request',
-    required: true
+    required: true,
   },
   chef_id: {
     type: Schema.Types.ObjectId,
-    ref: 'Chef',
-    required: true
+    ref: 'User',  // Changed to reference 'User' instead of 'Chef'
+    required: true,
   },
   status: {
     type: String,
     enum: ['sent', 'viewed', 'responded'],
-    default: 'sent'
+    default: 'sent',
   },
   created_at: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   updated_at: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
 module.exports = mongoose.model('Notification', NotificationSchema);
+
+
+// old
+// const mongoose = require('mongoose');
+// const Schema = mongoose.Schema;
+
+// const NotificationSchema = new Schema({
+//   request_id: {
+//     type: Schema.Types.ObjectId,
+//     ref: 'Request',
+//     required: true
+//   },
+//   chef_id: {
+//     type: Schema.Types.ObjectId,
+//     ref: 'Chef',
+//     required: true
+//   },
+//   status: {
+//     type: String,
+//     enum: ['sent', 'viewed', 'responded'],
+//     default: 'sent'
+//   },
+//   created_at: {
+//     type: Date,
+//     default: Date.now
+//   },
+//   updated_at: {
+//     type: Date,
+//     default: Date.now
+//   }
+// });
+
+// module.exports = mongoose.model('Notification', NotificationSchema);

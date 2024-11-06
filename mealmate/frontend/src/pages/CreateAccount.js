@@ -19,8 +19,21 @@ function SignUp() {
     confirmPassword: '',
     lat: '',
     lng: '',
-    role: 'user', // default to 'user'
+    // role: 'user', // default to 'user'
   });
+
+  // file upload: remove chef model
+  const [certificate, setCertificate] = useState(null);
+  const handleFileChange = (e) => {
+    setCertificate(e.target.files[0]);
+  };
+  const data = new FormData();
+    Object.keys(formData).forEach((key) => {
+      data.append(key, formData[key]);
+    });
+    if (certificate) {
+      data.append('food_handling_certificate', certificate);
+    }
 
   const handleChange = (e) => {
     setFormData({
@@ -36,7 +49,9 @@ function SignUp() {
     }
     try {
       console.log(formData);
-      const response = await axios.post('http://localhost:5000/user/create-account', formData);
+      const response = await axios.post('http://localhost:5000/user/create-account', data, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
       console.log('User signed up successfully:', response.data);
       // Redirect user here if needed
     } catch (error) {
@@ -121,6 +136,15 @@ function SignUp() {
                     name="phone"
                     onChange={handleChange}
                     required />
+                </Label>
+                <Label className="mt-4">
+                <span>Food Handling Certificate (optional)</span>
+                <input
+                  className="mt-1"
+                  type="file"
+                  name="food_handling_certificate"
+                  onChange={handleFileChange}
+                />
                 </Label>
 
                 <Label className="mt-4">

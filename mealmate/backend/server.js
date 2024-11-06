@@ -7,6 +7,7 @@ const chefRoute = require('./routes/chefRoute');
 
 const requestRoutes = require('./routes/requestRoute');
 
+const responseRoute = require('./routes/responseRoute');
 
 const cors = require('cors');
 
@@ -26,6 +27,7 @@ connectDB();
 app.use('/user', userRoute);
 app.use('/chef', chefRoute);
 app.use('/request', requestRoutes);
+app.use('/responses', responseRoute);
 
 
 app.get('/api', (req, res) => {
