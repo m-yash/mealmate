@@ -8,13 +8,15 @@
 const routes = [
   {
     path: '/app/dashboard', // the url
-    icon: 'HomeIcon', // the component being exported from icons/index.js
-    name: 'Your Requests', // name that appear in Sidebar
+    // icon: 'HomeIcon',
+    icon: 'RequestIcon', // the component being exported from icons/index.js
+    name: 'Requests', // name that appear in Sidebar
   },
   {
     path: '/app/appeals',
-    icon: 'TablesIcon',
-    name: 'Check Response',
+    // icon: 'TablesIcon',
+    icon: 'ChefIcon',
+    name: 'Appeals',
   },
   // {
   //   path: '/app/forms',

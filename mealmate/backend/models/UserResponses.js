@@ -13,7 +13,7 @@ const UserResponseSchema = new mongoose.Schema({
   },
   response_status: {
     type: String,
-    enum: ['accepted', 'rejected'],
+    enum: ['pending','accepted', 'rejected'],
     required: true,
   },
   created_at: {

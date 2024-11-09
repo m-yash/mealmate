@@ -28,34 +28,126 @@ const RequestsWithAppeals = () => {
   const fetchAppeals = async () => {
     const userId = localStorage.getItem('user_id');
     try {
-      const response = await fetch(`/responses/fetch-appeals/${userId}`);
-      const appealsData = await response.json();
+        const response = await fetch(`/responses/fetch-appeals/${userId}`);
 
-      // Group appeals by request ID
-      const appealsGrouped = appealsData.reduce((acc, appeal) => {
-        const requestId = appeal.request_id._id;
-        if (!acc[requestId]) acc[requestId] = [];
-        acc[requestId].push(appeal);
-        return acc;
-      }, {});
-
-      // Initialize pagination state for each request if not already set
-      const initialPaginationState = Object.keys(appealsGrouped).reduce((acc, requestId) => {
-        if (!acc[requestId]) {
-          acc[requestId] = {
-            page: 1,
-            totalResults: appealsGrouped[requestId].length,
-          };
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error("Error fetching appeals:", errorData.error);
+            toast.error("Error fetching appeals: " + errorData.error);
+            return;
         }
-        return acc;
-      }, paginationState);
 
-      setAppeals(appealsGrouped);
-      setPaginationState(initialPaginationState);
+        const appealsData = await response.json();
+
+        // Group appeals by request ID
+        const appealsGrouped = appealsData.reduce((acc, appeal) => {
+            const requestId = appeal.request_id._id;
+            if (!acc[requestId]) acc[requestId] = [];
+            acc[requestId].push(appeal);
+            return acc;
+        }, {});
+
+        // Filter out requests that have any accepted or rejected appeals
+        const filteredAppealsGrouped = Object.keys(appealsGrouped).reduce((acc, requestId) => {
+            // Check if there are any appeals that are pending
+            const hasPendingAppeals = appealsGrouped[requestId].some(appeal => appeal.response_status === 'pending');
+
+            // Only include requests that have pending appeals
+            if (hasPendingAppeals) {
+                acc[requestId] = appealsGrouped[requestId];
+            }
+            return acc;
+        }, {});
+
+        // Initialize pagination state for each request
+        const initialPaginationState = Object.keys(filteredAppealsGrouped).reduce((acc, requestId) => {
+            acc[requestId] = {
+                page: 1,
+                totalResults: filteredAppealsGrouped[requestId].length,
+            };
+            return acc;
+        }, {});
+
+        setAppeals(filteredAppealsGrouped);
+        setPaginationState(initialPaginationState);
     } catch (error) {
-      console.error("Error fetching appeals:", error);
+        console.error("Unexpected error fetching appeals:", error);
+        toast.error("Unexpected error fetching appeals");
     }
-  };
+};
+  // const fetchAppeals = async () => {
+  //   const userId = localStorage.getItem('user_id');
+  //   try {
+  //     const response = await fetch(`/responses/fetch-appeals/${userId}`);
+      
+  //     if (!response.ok) {
+  //       // If the response is not OK, parse and display the error message
+  //       const errorData = await response.json();
+  //       console.error("Error fetching appeals:", errorData.error);
+  //       toast.error("Error fetching appeals: " + errorData.error);
+  //       return;
+  //     }
+  
+  //     const appealsData = await response.json();
+  
+  //     // Group appeals by request ID
+  //     const appealsGrouped = appealsData.reduce((acc, appeal) => {
+  //       const requestId = appeal.request_id._id;
+  //       if (!acc[requestId]) acc[requestId] = [];
+  //       acc[requestId].push(appeal);
+  //       return acc;
+  //     }, {});
+  
+  //     // Initialize pagination state for each request if not already set
+  //     const initialPaginationState = Object.keys(appealsGrouped).reduce((acc, requestId) => {
+  //       if (!acc[requestId]) {
+  //         acc[requestId] = {
+  //           page: 1,
+  //           totalResults: appealsGrouped[requestId].length,
+  //         };
+  //       }
+  //       return acc;
+  //     }, paginationState);
+  
+  //     setAppeals(appealsGrouped);
+  //     setPaginationState(initialPaginationState);
+  //   } catch (error) {
+  //     console.error("Unexpected error fetching appeals:", error);
+  //     toast.error("Unexpected error fetching appeals");
+  //   }
+  // };
+  
+  // const fetchAppeals = async () => {
+  //   const userId = localStorage.getItem('user_id');
+  //   try {
+  //     const response = await fetch(`/responses/fetch-appeals/${userId}`);
+  //     const appealsData = await response.json();
+
+  //     // Group appeals by request ID
+  //     const appealsGrouped = appealsData.reduce((acc, appeal) => {
+  //       const requestId = appeal.request_id._id;
+  //       if (!acc[requestId]) acc[requestId] = [];
+  //       acc[requestId].push(appeal);
+  //       return acc;
+  //     }, {});
+
+  //     // Initialize pagination state for each request if not already set
+  //     const initialPaginationState = Object.keys(appealsGrouped).reduce((acc, requestId) => {
+  //       if (!acc[requestId]) {
+  //         acc[requestId] = {
+  //           page: 1,
+  //           totalResults: appealsGrouped[requestId].length,
+  //         };
+  //       }
+  //       return acc;
+  //     }, paginationState);
+
+  //     setAppeals(appealsGrouped);
+  //     setPaginationState(initialPaginationState);
+  //   } catch (error) {
+  //     console.error("Error fetching appeals:", error);
+  //   }
+  // };
 
   useEffect(() => {
     let isMounted = true; // Track whether component is mounted
@@ -67,29 +159,62 @@ const RequestsWithAppeals = () => {
     };
   }, []);
 
-  const handleResponse = async (responseId, status) => {
-    const endpoint = status === 'accept' ? '/responses/accept' : '/responses/reject';
+  // const handleResponse = async (responseId, status) => {
+  //   const endpoint = status === 'accept' ? '/responses/accept' : '/responses/reject';
   
+  //   try {
+  //     const response = await fetch(endpoint, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({ response_id: responseId }),
+  //     });
+  
+  //     const message = await response.text();
+  //     toast.success(message);
+  
+  //     // Re-fetch appeals to update the UI
+  //     fetchAppeals();
+  //   } catch (error) {
+  //     toast.error("Error processing response");
+  //   }
+  // };
+
+  // handle response to implement acceptance of appeal by user
+  const handleResponse = async (responseId, status, requestId, chefId) => {
     try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ response_id: responseId }),
-      });
+      if (status === 'accept') {
+        // Accept the appeal and create a booking
+        const response = await fetch('/responses/accept', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            response_id: responseId,
+            request_id: requestId,
+            chef_id: chefId,
+          }),
+        });
+        const message = await response.text();
+        toast.success(message);
+      } else {
+        // Reject the appeal
+        const response = await fetch('/responses/reject', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ response_id: responseId }),
+        });
+        const message = await response.text();
+        toast.success(message);
+      }
   
-      const message = await response.text();
-      toast.success(message);
-  
-      // Re-fetch appeals to update the UI
+      // Refetch appeals to update the display
       fetchAppeals();
     } catch (error) {
       toast.error("Error processing response");
     }
   };
-
-  // handle response to implement acceptance of appeal by user
+  
   // const handleResponse = async (responseId, status, requestId, chefId) => {
   //   try {
   //     if (status === 'accept') {
@@ -193,7 +318,7 @@ const RequestsWithAppeals = () => {
                       </TableCell>
                       <TableCell>
                         <Button onClick={() => handleResponse(appeal._id, 'accept')}>Accept</Button>
-                        <Button onClick={() => handleResponse(appeal._id, 'reject')} layout="link">Reject</Button>
+                        {/* <Button onClick={() => handleResponse(appeal._id, 'reject')} layout="link">Reject</Button> */}
                       </TableCell>
                     </TableRow>
                   ))}

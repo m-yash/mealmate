@@ -2,8 +2,13 @@ import React, { useState } from 'react'
 import { useHistory , Link } from 'react-router-dom'
 import axios from 'axios';
 
-import ImageLight from '../assets/img/login-office.jpeg'
-import ImageDark from '../assets/img/login-office-dark.jpeg'
+// import ImageLight from '../assets/img/login-office.jpeg'
+// import ImageDark from '../assets/img/login-office-dark.jpeg'
+
+
+import ImageLight from '../assets/img/chef2.jpg'
+import ImageDark from '../assets/img/chef2.jpg'
+
 import { GithubIcon, TwitterIcon } from '../icons'
 import { Label, Input, Button } from '@windmill/react-ui'
 

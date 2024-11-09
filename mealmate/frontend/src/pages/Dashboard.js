@@ -105,7 +105,8 @@ const handleAppeal = async (requestId) => {
       chef_id: chefId,
     });
 
-    toast.success(response.data.message); // Display success message using toast
+    toast.success('Request appealed successfully!'); // Display success message using toast
+    // toast.success('Request appealed successfully!' + response.data.message); // Display success message using toast
   } catch (error) {
     toast.error(error.response?.data?.message || 'Error appealing the request'); // Display error message using toast
   }

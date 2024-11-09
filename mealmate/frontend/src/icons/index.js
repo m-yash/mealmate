@@ -27,7 +27,12 @@ import { ReactComponent as OutlinePersonIcon } from './outlinePerson.svg'
 import { ReactComponent as OutlineCogIcon } from './outlineCog.svg'
 import { ReactComponent as OutlineLogoutIcon } from './outlineLogout.svg'
 
+import { ReactComponent as RequestIcon } from './request.svg'
+import { ReactComponent as ChefIcon } from './chef.svg'
+
 export {
+  RequestIcon,
+  ChefIcon,
   ButtonsIcon,
   CardsIcon,
   ChartsIcon,

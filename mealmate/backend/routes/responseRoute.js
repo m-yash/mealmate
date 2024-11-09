@@ -21,11 +21,11 @@ router.post('/appeal', async (req, res) => {
     const response = new UserResponse({
       request_id,
       chef_id,
-      response_status: 'accepted',
+      response_status: 'pending',
     });
     await response.save();
 
-    res.status(201).send("Request appealed successfully");
+    res.status(200).send("Request appealed successfully");
   } catch (error) {
     res.status(500).send("Error recording appeal: " + error.message);
   }
@@ -58,16 +58,84 @@ router.get('/fetch-appeals/:requesterId', async (req, res) => {
     // Extract request IDs
     const requestIds = userRequests.map(request => request._id);
 
-    // Fetch all responses linked to these requests
-    const appeals = await UserResponse.find({ request_id: { $in: requestIds } })
-      .populate('chef_id', 'name') // Populate chef name
-      .populate('request_id', 'food_preference date');
+    // Get IDs of requests with existing bookings
+    const bookedRequestIds = await Booking.find({ user_id: requesterId })
+      .select('request_id')
+      .then(bookings => bookings
+        .map(booking => booking.request_id ? booking.request_id.toString() : null)
+        .filter(id => id !== null) // Filter out any null values
+      );
 
-    res.status(200).json(appeals);
+    // Filter appeals to exclude requests that have an accepted booking
+    const appeals = await UserResponse.find({
+      request_id: { $in: requestIds.filter(id => !bookedRequestIds.includes(id.toString())) }
+    })
+    .populate('chef_id', 'name') // Populate chef name
+    .populate('request_id', 'food_preference date');
+
+    // If there are no appeals left for a request, you can return an empty array
+    const filteredAppeals = appeals.filter(appeal => appeal.response_status !== 'accepted');
+
+    res.status(200).json(filteredAppeals);
   } catch (error) {
-    res.status(500).send("Error fetching appeals: " + error.message);
+    res.status(500).json({ error: "Error fetching appeals: " + error.message });
   }
 });
+
+// // Fetch appeals for a requester's requests
+// router.get('/fetch-appeals/:requesterId', async (req, res) => {
+//   const requesterId = req.params.requesterId;
+
+//   try {
+//     // Fetch all requests made by the requester
+//     const userRequests = await Request.find({ user_id: requesterId }).select('_id');
+
+//     // Extract request IDs
+//     const requestIds = userRequests.map(request => request._id);
+
+//     // Get IDs of requests with existing bookings, handling cases where `request_id` may be undefined
+//     const bookedRequestIds = await Booking.find({ user_id: requesterId })
+//       .select('request_id')
+//       .then(bookings => bookings
+//         .map(booking => booking.request_id ? booking.request_id.toString() : null)
+//         .filter(id => id !== null) // Filter out any null values
+//       );
+
+//     // Filter appeals to exclude requests that have an accepted booking
+//     const appeals = await UserResponse.find({
+//       request_id: { $in: requestIds.filter(id => !bookedRequestIds.includes(id.toString())) }
+//     })
+//     .populate('chef_id', 'name') // Populate chef name
+//     .populate('request_id', 'food_preference date');
+
+//     res.status(200).json(appeals);
+//   } catch (error) {
+//     // Send a JSON error response
+//     res.status(500).json({ error: "Error fetching appeals: " + error.message });
+//   }
+// });
+
+// // Fetch appeals for a requester's requests
+// router.get('/fetch-appeals/:requesterId', async (req, res) => {
+//   const requesterId = req.params.requesterId;
+
+//   try {
+//     // Fetch all requests made by the requester
+//     const userRequests = await Request.find({ user_id: requesterId }).select('_id');
+
+//     // Extract request IDs
+//     const requestIds = userRequests.map(request => request._id);
+
+//     // Fetch all responses linked to these requests
+//     const appeals = await UserResponse.find({ request_id: { $in: requestIds } })
+//       .populate('chef_id', 'name') // Populate chef name
+//       .populate('request_id', 'food_preference date');
+
+//     res.status(200).json(appeals);
+//   } catch (error) {
+//     res.status(500).send("Error fetching appeals: " + error.message);
+//   }
+// });
 
 // Accept an appeal and create a booking
 router.post('/accept', async (req, res) => {
