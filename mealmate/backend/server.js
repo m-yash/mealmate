@@ -9,6 +9,11 @@ const requestRoutes = require('./routes/requestRoute');
 
 const responseRoute = require('./routes/responseRoute');
 
+const profileUpdateRoute = require('./routes/profileUpdateRoute');
+
+const statisticRoute = require('./routes/statisticRoute');
+
+
 const cors = require('cors');
 
 const app = express();
@@ -26,8 +31,14 @@ connectDB();
 // Define routes
 app.use('/user', userRoute);
 app.use('/chef', chefRoute);
+
 app.use('/request', requestRoutes);
 app.use('/responses', responseRoute);
+
+app.use('/user', profileUpdateRoute);
+
+app.use('/stats', statisticRoute);
+
 
 
 app.get('/api', (req, res) => {

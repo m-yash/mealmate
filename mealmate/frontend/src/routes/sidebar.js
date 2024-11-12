@@ -18,37 +18,47 @@ const routes = [
     icon: 'ChefIcon',
     name: 'Appeals',
   },
-  // {
-  //   path: '/app/forms',
-  //   icon: 'FormsIcon',
-  //   name: 'Forms',
-  // },
-  // {
-  //   path: '/app/cards',
-  //   icon: 'CardsIcon',
-  //   name: 'Cards',
-  // },
-  // {
-  //   path: '/app/charts',
-  //   icon: 'ChartsIcon',
-  //   name: 'Charts',
-  // },
-  // {
-  //   path: '/app/buttons',
-  //   icon: 'ButtonsIcon',
-  //   name: 'Buttons',
-  // },
-  // {
-  //   path: '/app/modals',
-  //   icon: 'ModalsIcon',
-  //   name: 'Modals',
-  // },
+  {
+    path: '/app/forms',
+    icon: 'FormsIcon',
+    name: 'Forms',
+  },
+  {
+    path: '/app/cards',
+    icon: 'CardsIcon',
+    name: 'Cards',
+  },
+  {
+    path: '/app/charts',
+    icon: 'ChartsIcon',
+    name: 'Charts',
+  },
+  {
+    path: '/app/buttons',
+    icon: 'ButtonsIcon',
+    name: 'Buttons',
+  },
+  {
+    path: '/app/modals',
+    icon: 'ModalsIcon',
+    name: 'Modals',
+  },
+  {
+    path: '/app/statistic',
+    icon: 'ModalsIcon',
+    name: 'Statistic',
+  },
 
   {
     icon: 'PagesIcon',
-    name: 'Pages',
+    name: 'Settings',
     routes: [
       // submenu
+      {
+        path: '/app/update-profile',
+        name: 'Update Profile',
+      },
+      
       {
         path: '/login',
         name: 'Login',
@@ -69,6 +79,8 @@ const routes = [
         path: '/app/blank',
         name: 'Blank',
       },
+
+      
     ],
   },
 ]

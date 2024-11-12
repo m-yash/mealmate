@@ -7,36 +7,80 @@ const Request = require('../models/Request');
 // to fetch user_id of the logged in user
 const User = require('../models/User');
 
+const moment = require('moment');
+
 // to save a new user request
 router.post('/new-request', async (req, res) => {
   try {
-    const { user_email, food_preference, date, location } = req.body;
+    const {
+      user_email,
+      food_preference,
+      date,
+      time,
+      dietary_preference,
+      allergies,
+      spice_level,
+      budget
+    } = req.body;
 
     const user = await User.findOne({ email: user_email });
-
-    console.log(user._id);
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Create a new request
+    const formattedTime = moment(time, 'HH:mm').format('hh:mm A'); // 12-hour format with AM/PM
+
     const newRequest = new Request({
-      user_id: user._id, // using user_id
+      user_id: user._id,
       food_preference,
       date,
-      location: user.location, // Use user’s saved location
+      time: formattedTime,
+      dietary_preference,
+      allergies,
+      spice_level,
+      budget,
+      location: user.location,
       status: 'pending',
     });
 
-    // Save request to the database
     await newRequest.save();
 
     res.status(200).json({ message: 'Request submitted successfully!' });
   } catch (err) {
-    res.status(500).json({ message: 'Server Error', error: err.message });
+    res.status(500).json({ message: 'Error submitting request', error: err.message });
   }
 });
+
+// router.post('/new-request', async (req, res) => {
+//   try {
+//     const { user_email, food_preference, date, location } = req.body;
+
+//     const user = await User.findOne({ email: user_email });
+
+//     console.log(user._id);
+
+//     if (!user) {
+//       return res.status(404).json({ message: 'User not found' });
+//     }
+
+//     // Create a new request
+//     const newRequest = new Request({
+//       user_id: user._id, // using user_id
+//       food_preference,
+//       date,
+//       location: user.location, // Use user’s saved location
+//       status: 'pending',
+//     });
+
+//     // Save request to the database
+//     await newRequest.save();
+
+//     res.status(200).json({ message: 'Request submitted successfully!' });
+//   } catch (err) {
+//     res.status(500).json({ message: 'Server Error', error: err.message });
+//   }
+// });
 
 // // to fetch the saved requests
 // router.get('/all-request', async (req, res) => {
@@ -174,31 +218,28 @@ const calculateDistance = (lat1, lng1, lat2, lng2) => {
 //     res.status(500).json({ message: 'Server Error', error: error.message });
 //   }
 // });
+
 router.get('/all-request', async (req, res) => {
   const { email } = req.query;
 
   try {
-    // Fetch the user's location using email
     const user = await User.findOne({ email });
-    
-    // Check if user and user location are available
+
     if (!user || !user.location || !user.location.coordinates) {
       return res.status(404).json({ message: 'User location not found' });
     }
 
     const [userLng, userLat] = user.location.coordinates;
-
-    // Define the 3 km radius in radians (3 km / Earth radius in km)
     const radiusInRadians = 3 / 6378.1;
 
-    // Fetch requests within 3 km using MongoDB's geospatial query and populate user_id
     const nearbyRequests = await Request.find({
+      status: { $ne: 'fulfilled' }, // Exclude fulfilled requests
       location: {
         $geoWithin: {
           $centerSphere: [[userLng, userLat], radiusInRadians],
         },
       },
-    }).populate('user_id', 'name'); // Populate only the 'name' field of user_id
+    }).populate('user_id', 'name');
 
     res.json(nearbyRequests);
   } catch (error) {
@@ -206,6 +247,39 @@ router.get('/all-request', async (req, res) => {
     res.status(500).json({ message: 'Server Error', error: error.message });
   }
 });
+
+// router.get('/all-request', async (req, res) => {
+//   const { email } = req.query;
+
+//   try {
+//     // Fetch the user's location using email
+//     const user = await User.findOne({ email });
+    
+//     // Check if user and user location are available
+//     if (!user || !user.location || !user.location.coordinates) {
+//       return res.status(404).json({ message: 'User location not found' });
+//     }
+
+//     const [userLng, userLat] = user.location.coordinates;
+
+//     // Define the 3 km radius in radians (3 km / Earth radius in km)
+//     const radiusInRadians = 3 / 6378.1;
+
+//     // Fetch requests within 3 km using MongoDB's geospatial query and populate user_id
+//     const nearbyRequests = await Request.find({
+//       location: {
+//         $geoWithin: {
+//           $centerSphere: [[userLng, userLat], radiusInRadians],
+//         },
+//       },
+//     }).populate('user_id', 'name'); // Populate only the 'name' field of user_id
+
+//     res.json(nearbyRequests);
+//   } catch (error) {
+//     console.error("Error fetching requests:", error);
+//     res.status(500).json({ message: 'Server Error', error: error.message });
+//   }
+// });
 
 
 module.exports = router;

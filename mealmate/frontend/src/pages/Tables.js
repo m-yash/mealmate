@@ -11,6 +11,8 @@ import {
   Button,
   Badge,
   Pagination,
+  Card,
+  CardBody
 } from '@windmill/react-ui'
 
 
@@ -280,7 +282,8 @@ const RequestsWithAppeals = () => {
   return (
     <div>
       <ToastContainer />
-      <PageTitle>Chef Appeals for Your Requests</PageTitle>
+      <PageTitle>Appeals for Your Requests</PageTitle>
+      
       {Object.keys(appeals).map((requestId) => {
         // Ensure pagination state is initialized
         const pagination = paginationState[requestId] || { page: 1, totalResults: 0 };
@@ -291,9 +294,9 @@ const RequestsWithAppeals = () => {
 
         return (
           <div key={requestId} className="mb-6">
-            <SectionTitle>
+            <p className="mb-4 font-semibold text-gray-600 dark:text-gray-300">
               Request for {appeals[requestId][0].request_id.food_preference} on {new Date(appeals[requestId][0].request_id.date).toLocaleDateString()}
-            </SectionTitle>
+              </p>
             <TableContainer className="mb-8">
               <Table>
                 <TableHeader>
@@ -317,7 +320,7 @@ const RequestsWithAppeals = () => {
                         </span>
                       </TableCell>
                       <TableCell>
-                        <Button onClick={() => handleResponse(appeal._id, 'accept')}>Accept</Button>
+                        <Button size="small" onClick={() => handleResponse(appeal._id, 'accept')}>Accept</Button>
                         {/* <Button onClick={() => handleResponse(appeal._id, 'reject')} layout="link">Reject</Button> */}
                       </TableCell>
                     </TableRow>

@@ -44,7 +44,7 @@ function Dashboard() {
   const [page, setPage] = useState(1);
   const [data, setData] = useState([]);
   const [totalResults, setTotalResults] = useState(0);
-  const resultsPerPage = 10;
+  const resultsPerPage = 10; 
 
   // function to fetch location (Lat and Long) of the user logged-in
   // const fetchUserLocation = async () => {

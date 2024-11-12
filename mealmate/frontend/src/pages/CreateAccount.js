@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 // import ImageLight from '../assets/img/create-account-office.jpeg'
@@ -31,12 +31,12 @@ function SignUp() {
     setCertificate(e.target.files[0]);
   };
   const data = new FormData();
-    Object.keys(formData).forEach((key) => {
-      data.append(key, formData[key]);
-    });
-    if (certificate) {
-      data.append('food_handling_certificate', certificate);
-    }
+  Object.keys(formData).forEach((key) => {
+    data.append(key, formData[key]);
+  });
+  if (certificate) {
+    data.append('food_handling_certificate', certificate);
+  }
 
   const handleChange = (e) => {
     setFormData({
@@ -61,6 +61,39 @@ function SignUp() {
       console.error('There was an error signing up the user:', error.response?.data || error.message);
     }
   };
+
+  const handleAddressSelect = (value) => {
+    if (value && value.properties) {
+      const { lat, lon } = value.properties;
+      setFormData((prevFormData) => ({
+        ...prevFormData, // Preserve existing form data
+        lat,
+        lng: lon,
+      }));
+    } else {
+    // Clear lat and lng when no address is selected
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      lat: '',
+      lng: '',
+    }));
+  }
+};
+
+  useEffect(() => {
+    const autocompleteInput = new window.autocomplete.GeocoderAutocomplete(
+      document.getElementById("autocomplete"),
+      '2f3d2883f0724021874e30978211eb3a',
+      { /* options like country restriction if needed */ }
+    );
+
+    autocompleteInput.on('select', handleAddressSelect);
+
+    return () => {
+      autocompleteInput.off('select', handleAddressSelect);
+    };
+  }, []);
+
   return (
     <div className="flex items-center min-h-screen p-6 bg-gray-50 dark:bg-gray-900">
       <div className="flex-1 h-full max-w-4xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl dark:bg-gray-800">
@@ -70,13 +103,13 @@ function SignUp() {
               aria-hidden="true"
               className="object-cover w-full h-full dark:hidden"
               src={ImageLight}
-              alt="Office"
+              alt="Chef"
             />
             <img
               aria-hidden="true"
               className="hidden object-cover w-full h-full dark:block"
               src={ImageDark}
-              alt="Office"
+              alt="Chef"
             />
           </div>
           <main className="flex items-center justify-center p-6 sm:p-12 md:w-1/2">
@@ -141,16 +174,35 @@ function SignUp() {
                     required />
                 </Label>
                 <Label className="mt-4">
-                <span>Food Handling Certificate (optional)</span>
-                <input
-                  className="mt-1"
-                  type="file"
-                  name="food_handling_certificate"
-                  onChange={handleFileChange}
-                />
+                  <span>Food Handling Certificate (optional)</span>
+                  <input
+                    className="mt-1"
+                    type="file"
+                    name="food_handling_certificate"
+                    onChange={handleFileChange}
+                    style={{
+          marginTop: '8px',
+          padding: '8px',
+          border: '1px solid #ccc',
+          borderRadius: '4px',
+          cursor: 'pointer',
+          display: 'block'
+        }}
+                  />
+                  <style>
+                    {`
+                      .autocomplete-container {
+                        position: relative;
+                      }
+                    `}
+                  </style>
+                </Label>
+                <Label className="mt-4">
+                  <span>Address</span>
+                  <div id="autocomplete" className="autocomplete-container mt-1"></div>
                 </Label>
 
-                <Label className="mt-4">
+                {/* <Label className="mt-4">
                   <span>Latitude</span>
                   <Input
                     className="mt-1"
@@ -172,7 +224,7 @@ function SignUp() {
                     onChange={handleChange}
                     required
                   />
-                </Label>
+                </Label> */}
 
                 <Label className="mt-6" check>
                   <Input type="checkbox" />

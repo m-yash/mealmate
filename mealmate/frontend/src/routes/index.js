@@ -11,6 +11,12 @@ const Tables = lazy(() => import('../pages/Tables'))
 const Page404 = lazy(() => import('../pages/404'))
 const Blank = lazy(() => import('../pages/Blank'))
 
+
+const Statistic = lazy(() => import('../pages/Statistic'))
+
+const UpdateProfile = lazy(() => import('../pages/UpdateProfile'))
+
+
 /**
  * ⚠ These are internal routes!
  * They will be rendered inside the app, using the default `containers/Layout`.
@@ -57,6 +63,15 @@ const routes = [
   {
     path: '/blank',
     component: Blank,
+  },
+
+  {
+    path: '/update-profile',
+    component: UpdateProfile,
+  },
+  {
+    path: '/statistic',
+    component: Statistic,
   },
 ]
 

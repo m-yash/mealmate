@@ -72,7 +72,7 @@ function Forms() {
         </Label>
 
         <Label className="mt-6" check>
-          <Input type="checkbox" />
+          <Input type="checkbox" required/>
           <span className="ml-2">
             I agree to the <span className="underline">privacy policy</span>
           </span>
