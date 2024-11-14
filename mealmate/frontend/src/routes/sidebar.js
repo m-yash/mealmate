@@ -10,13 +10,13 @@ const routes = [
     path: '/app/dashboard', // the url
     // icon: 'HomeIcon',
     icon: 'RequestIcon', // the component being exported from icons/index.js
-    name: 'Requests', // name that appear in Sidebar
+    name: 'Meal Requests', // name that appear in Sidebar
   },
   {
     path: '/app/appeals',
     // icon: 'TablesIcon',
     icon: 'ChefIcon',
-    name: 'Appeals',
+    name: 'Chef\'s Appeal',
   },
   {
     path: '/app/forms',

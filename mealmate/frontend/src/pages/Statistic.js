@@ -5,6 +5,9 @@ import { Bar } from 'react-chartjs-2';
 import SectionTitle from '../uicomponents/Typography/SectionTitle';
 import PageTitle from '../uicomponents/Typography/PageTitle'
 
+import { CartIcon, ChatIcon, MoneyIcon, PeopleIcon, ChefIcon, RequestIcon } from '../icons'
+import RoundIcon from '../uicomponents/RoundIcon'
+
 const StatisticsPage = () => {
   const [totalRequests, setTotalRequests] = useState(0);
   const [totalAppeals, setTotalAppeals] = useState(0);
@@ -81,13 +84,34 @@ const StatisticsPage = () => {
     <div>
     <PageTitle>Statistics</PageTitle>
       <SectionTitle>Statistics for last 30 Days</SectionTitle>
-      <div className="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
-        <InfoCard title="Total Food Requests" value={totalRequests} />
-        <InfoCard title="Total Appeals" value={totalAppeals} />
-        <InfoCard title="Average Appeals per Request" value={averageAppeals} />
+      <div className="grid gap-6 mb-8 md:grid-cols-2 ">
+        <InfoCard title="Total Food Requests" value={totalRequests}>
+        <RoundIcon
+            icon={PeopleIcon}
+            iconColorClass="text-orange-500 dark:text-orange-100"
+            bgColorClass="bg-orange-100 dark:bg-orange-500"
+            className="mr-4"
+          />
+        </InfoCard>
+        <InfoCard title="Total Appeals" value={totalAppeals}>
+        <RoundIcon
+            icon={MoneyIcon}
+            iconColorClass="text-blue-500 dark:text-blue-100"
+            bgColorClass="bg-blue-100 dark:bg-blue-500"
+            className="mr-4"
+          />
+        </InfoCard>
+        <InfoCard title="Average Appeals per Request" value={averageAppeals}>
+        <RoundIcon
+            icon={MoneyIcon}
+            iconColorClass="text-green-500 dark:text-green-100"
+            bgColorClass="bg-green-100 dark:bg-green-500"
+            className="mr-4"
+          />
+        </InfoCard>
       </div>
       <SectionTitle>Statistics for last 6 months</SectionTitle>
-      <ChartCard title="Monthly Food Requests and Appeals" style={{ height: '400px', overflow: 'auto' }}>
+      <ChartCard title="Monthly Food Requests and Appeals" style={{ height: '400px', overflow: 'auto'}}>
         <Bar data={barChartData} options={chartOptions} />
       </ChartCard>
     </div>

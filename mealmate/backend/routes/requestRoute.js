@@ -232,6 +232,9 @@ router.get('/all-request', async (req, res) => {
     const [userLng, userLat] = user.location.coordinates;
     const radiusInRadians = 3 / 6378.1;
 
+    // Get the current date and time
+    const currentDateTime = new Date();
+
     const nearbyRequests = await Request.find({
       status: { $ne: 'fulfilled' }, // Exclude fulfilled requests
       location: {
@@ -239,6 +242,15 @@ router.get('/all-request', async (req, res) => {
           $centerSphere: [[userLng, userLat], radiusInRadians],
         },
       },
+      $or: [
+        {
+          date: { $gt: currentDateTime },
+        },
+        {
+          date: currentDateTime,
+          time: { $gte: currentDateTime.toTimeString().slice(0, 5) }, // Compare time as HH:MM
+        }
+      ]
     }).populate('user_id', 'name');
 
     res.json(nearbyRequests);

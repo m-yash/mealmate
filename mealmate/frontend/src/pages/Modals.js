@@ -3,6 +3,32 @@ import { Modal, ModalHeader, ModalBody, ModalFooter, Textarea, Button, Input, La
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+// const Modals = ({ isModalOpen, closeModal }) => {
+//   const email = localStorage.getItem('email');
+//   const [formData, setFormData] = useState({
+//     food_preference: '',
+//     date: '',
+//     time: '',
+//     dietary_preference: '',
+//     allergies: [],
+//     spice_level: '',
+//     budget: ''
+//   });
+
+//   const handleChange = (e) => {
+//     const { name, value, type, checked } = e.target;
+  
+//     if (type === 'checkbox' && name === 'allergies') {
+//       setFormData((prev) => {
+//         const newAllergies = checked
+//           ? [...(prev.allergies || []), value]
+//           : prev.allergies.filter((allergy) => allergy !== value);
+//         return { ...prev, allergies: newAllergies };
+//       });
+//     } else {
+//       setFormData({ ...formData, [name]: value });
+//     }
+//   };
 const Modals = ({ isModalOpen, closeModal }) => {
   const email = localStorage.getItem('email');
   const [formData, setFormData] = useState({
@@ -14,6 +40,15 @@ const Modals = ({ isModalOpen, closeModal }) => {
     spice_level: '',
     budget: ''
   });
+
+  // Get today's date and the date 7 days from now
+  const today = new Date();
+  const maxDate = new Date();
+  maxDate.setDate(today.getDate() + 7);
+
+  // Format the dates to 'YYYY-MM-DD'
+  const formattedToday = today.toISOString().split('T')[0];
+  const formattedMaxDate = maxDate.toISOString().split('T')[0];
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -29,7 +64,6 @@ const Modals = ({ isModalOpen, closeModal }) => {
       setFormData({ ...formData, [name]: value });
     }
   };
-  
   
 
   const handleSubmit = async (e) => {
@@ -98,6 +132,8 @@ const Modals = ({ isModalOpen, closeModal }) => {
                 onChange={handleChange}
                 className="mt-1"
                 required
+                min={formattedToday}  // Set minimum date
+                max={formattedMaxDate} // Set maximum date
               />
             </Label>
           </div>
@@ -153,12 +189,12 @@ const Modals = ({ isModalOpen, closeModal }) => {
                 </Label>
                 <Label check className="ml-4">
                 <Input
-  type="checkbox"
-  name="allergies"
-  value="dairy_free"
-  checked={formData.allergies?.includes("dairy_free") || false}
-  onChange={handleChange}
-/>
+                  type="checkbox"
+                  name="allergies"
+                  value="dairy_free"
+                  checked={formData.allergies?.includes("dairy_free") || false}
+                  onChange={handleChange}
+                />
                   <span className="ml-2">Dairy-Free</span>
                 </Label>
                 <Label check className="ml-4">
@@ -197,9 +233,9 @@ const Modals = ({ isModalOpen, closeModal }) => {
                 className="mt-1"
               >
                 <option value="">Select...</option>
-                <option value="Mild">Mild</option>
-                <option value="Medium">Medium</option>
-                <option value="Spicy">Spicy</option>
+                <option value="Mild Spicy">Mild</option>
+                <option value="Medium Spicy">Medium</option>
+                <option value="Extreme Spicy">Extreme</option>
               </Select>
             </Label>
           </div>

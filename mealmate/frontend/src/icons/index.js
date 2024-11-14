@@ -30,9 +30,13 @@ import { ReactComponent as OutlineLogoutIcon } from './outlineLogout.svg'
 import { ReactComponent as RequestIcon } from './request.svg'
 import { ReactComponent as ChefIcon } from './chef.svg'
 
+import { ReactComponent as AcceptIcon } from './accept.svg'
+
 export {
   RequestIcon,
   ChefIcon,
+  AcceptIcon,
+  
   ButtonsIcon,
   CardsIcon,
   ChartsIcon,

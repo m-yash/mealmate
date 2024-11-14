@@ -56,12 +56,12 @@ const mongoose = require('mongoose');
 // });
 
 // module.exports = mongoose.model('Request', RequestSchema);
-const RequestSchema = new mongoose.Schema({
+onst RequestSchema = new mongoose.Schema({
   user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   food_preference: { type: String, required: true }, // New field for the specific food name
   dietary_preference: { type: String, enum: ['Vegetarian', 'Non-Vegetarian', 'Vegan', 'Other'], required: true },
   allergies: { type: [String] },
-  spice_level: { type: String, enum: ['Mild', 'Medium', 'Spicy'], default: 'Mild' },
+  spice_level: { type: String, enum: ['Mild Spicy', 'Medium Spicy', 'Extreme Spicy'], default: 'Mild' },
   budget: { type: Number, min: 0 }, // New field for budget, optional
   date: { type: Date, required: true }, // Date + time, with backend validation to enforce 10-day window
   time: { type: String, required: true },
@@ -75,3 +75,4 @@ const RequestSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model('Request', RequestSchema);
+c
