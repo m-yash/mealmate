@@ -7,7 +7,7 @@ const Cards = lazy(() => import('../pages/Cards'))
 const Charts = lazy(() => import('../pages/Charts'))
 const Buttons = lazy(() => import('../pages/Buttons'))
 const Modals = lazy(() => import('../pages/Modals'))
-const Tables = lazy(() => import('../pages/Tables'))
+
 const Page404 = lazy(() => import('../pages/404'))
 const Blank = lazy(() => import('../pages/Blank'))
 
@@ -15,6 +15,14 @@ const Blank = lazy(() => import('../pages/Blank'))
 const Statistic = lazy(() => import('../pages/Statistic'))
 
 const UpdateProfile = lazy(() => import('../pages/UpdateProfile'))
+
+const AvailableAppeals = lazy(() => import('../pages/AvailableAppeals'))
+
+const MyAppeals = lazy(() => import('../pages/MyAppeals'))
+const MyRequests = lazy(() => import('../pages/MyRequests'))
+
+const Booking = lazy(() => import('../pages/Booking'))
+
 
 
 /**
@@ -54,7 +62,7 @@ const routes = [
   },
   {
     path: '/appeals',
-    component: Tables,
+    component: AvailableAppeals,
   },
   {
     path: '/404',
@@ -72,6 +80,18 @@ const routes = [
   {
     path: '/statistic',
     component: Statistic,
+  },
+  {
+    path: '/my-appeals',
+    component: MyAppeals,
+  },
+  {
+    path: '/my-requests',
+    component: MyRequests,
+  },
+  {
+    path: '/my-mates',
+    component: Booking,
   },
 ]
 

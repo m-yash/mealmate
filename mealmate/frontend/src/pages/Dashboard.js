@@ -120,7 +120,7 @@ function Dashboard() {
   return (
     <>
       <ToastContainer />
-      <PageTitle>Dashboard</PageTitle>
+      <PageTitle>Requests</PageTitle>
       <SectionTitle>Available Requests Near You</SectionTitle>
       <TableContainer className="mb-8">
         <Table>

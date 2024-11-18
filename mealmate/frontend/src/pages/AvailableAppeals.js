@@ -190,7 +190,10 @@ const RequestsWithAppeals = () => {
         // Accept the appeal and create a booking
         const response = await fetch('/responses/accept', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+           },
           body: JSON.stringify({
             response_id: responseId,
             request_id: requestId,
@@ -282,7 +285,8 @@ const RequestsWithAppeals = () => {
   return (
     <div>
       <ToastContainer />
-      <PageTitle>Appeals for Your Requests</PageTitle>
+      <PageTitle>Appeals</PageTitle>
+      <SectionTitle>Appeals for Your Requests</SectionTitle>
       
       {Object.keys(appeals).map((requestId) => {
         // Ensure pagination state is initialized

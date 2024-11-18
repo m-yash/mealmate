@@ -3,32 +3,7 @@ import { Modal, ModalHeader, ModalBody, ModalFooter, Textarea, Button, Input, La
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-// const Modals = ({ isModalOpen, closeModal }) => {
-//   const email = localStorage.getItem('email');
-//   const [formData, setFormData] = useState({
-//     food_preference: '',
-//     date: '',
-//     time: '',
-//     dietary_preference: '',
-//     allergies: [],
-//     spice_level: '',
-//     budget: ''
-//   });
 
-//   const handleChange = (e) => {
-//     const { name, value, type, checked } = e.target;
-  
-//     if (type === 'checkbox' && name === 'allergies') {
-//       setFormData((prev) => {
-//         const newAllergies = checked
-//           ? [...(prev.allergies || []), value]
-//           : prev.allergies.filter((allergy) => allergy !== value);
-//         return { ...prev, allergies: newAllergies };
-//       });
-//     } else {
-//       setFormData({ ...formData, [name]: value });
-//     }
-//   };
 const Modals = ({ isModalOpen, closeModal }) => {
   const email = localStorage.getItem('email');
   const [formData, setFormData] = useState({
@@ -76,6 +51,8 @@ const Modals = ({ isModalOpen, closeModal }) => {
       },
       body: JSON.stringify({
         ...formData,
+        dietary_preference: formData.dietary_preference || null, // If empty, send null
+        spice_level: formData.spice_level || null,
         user_email: email,
       }),
     });
@@ -156,7 +133,7 @@ const Modals = ({ isModalOpen, closeModal }) => {
           {/* Dietary Preference */}
           <div className="mb-4">
             <Label>
-              <span>Dietary Preference</span>
+              <span>Dietary Preference (optional)</span>
               <Select
                 name="dietary_preference"
                 value={formData.dietary_preference}
@@ -167,7 +144,6 @@ const Modals = ({ isModalOpen, closeModal }) => {
                 <option value="Vegetarian">Vegetarian</option>
                 <option value="Non-Vegetarian">Non-Vegetarian</option>
                 <option value="Vegan">Vegan</option>
-                <option value="Other">Other</option>
               </Select>
             </Label>
           </div>
@@ -175,7 +151,7 @@ const Modals = ({ isModalOpen, closeModal }) => {
           {/* Allergies */}
           <div className="mb-4">
             <Label>
-              <span>Allergies/Intolerances</span>
+              <span>Allergies/Intolerances (optional)</span>
               <div className="mt-2">
                 <Label check>
                 <Input
@@ -225,7 +201,7 @@ const Modals = ({ isModalOpen, closeModal }) => {
           {/* Spice Level */}
           <div className="mb-4">
             <Label>
-              <span>Spice Level</span>
+              <span>Spice Level (optional)</span>
               <Select
                 name="spice_level"
                 value={formData.spice_level}
@@ -241,7 +217,7 @@ const Modals = ({ isModalOpen, closeModal }) => {
           </div>
 
           {/* Budget */}
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <Label>
               <span>Budget</span>
               <Input
@@ -253,7 +229,7 @@ const Modals = ({ isModalOpen, closeModal }) => {
                 placeholder="Specify your budget in USD"
               />
             </Label>
-          </div>
+          </div> */}
         </form>
       </ModalBody>
       <ModalFooter>

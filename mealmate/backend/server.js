@@ -13,6 +13,8 @@ const profileUpdateRoute = require('./routes/profileUpdateRoute');
 
 const statisticRoute = require('./routes/statisticRoute');
 
+const bookingRoute = require('./routes/bookingRoute');
+
 
 const cors = require('cors');
 
@@ -28,6 +30,8 @@ app.use(express.json()); // Parse JSON bodies
 // Connect to the database
 connectDB();
 
+require('dotenv').config();
+
 // Define routes
 app.use('/user', userRoute);
 app.use('/chef', chefRoute);
@@ -38,6 +42,9 @@ app.use('/responses', responseRoute);
 app.use('/user', profileUpdateRoute);
 
 app.use('/stats', statisticRoute);
+
+app.use('/booking', bookingRoute);
+
 
 
 

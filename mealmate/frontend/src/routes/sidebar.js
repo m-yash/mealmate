@@ -10,38 +10,56 @@ const routes = [
     path: '/app/dashboard', // the url
     // icon: 'HomeIcon',
     icon: 'RequestIcon', // the component being exported from icons/index.js
-    name: 'Meal Requests', // name that appear in Sidebar
+    name: 'Available Requests', // name that appear in Sidebar
+  },
+  {
+    path: '/app/my-requests',
+    // icon: 'TablesIcon',
+    icon: 'RequestIcon',
+    name: 'My Requests',
   },
   {
     path: '/app/appeals',
     // icon: 'TablesIcon',
     icon: 'ChefIcon',
-    name: 'Chef\'s Appeal',
+    name: 'Available Appeals',
   },
   {
-    path: '/app/forms',
-    icon: 'FormsIcon',
-    name: 'Forms',
+    path: '/app/my-appeals',
+    // icon: 'TablesIcon',
+    icon: 'ChefIcon',
+    name: 'My Appeals',
   },
+  // {
+  //   path: '/app/forms',
+  //   icon: 'FormsIcon',
+  //   name: 'Forms',
+  // },
+  // {
+  //   path: '/app/cards',
+  //   icon: 'CardsIcon',
+  //   name: 'Cards',
+  // },
+  // {
+  //   path: '/app/charts',
+  //   icon: 'ChartsIcon',
+  //   name: 'Charts',
+  // },
+  // {
+  //   path: '/app/buttons',
+  //   icon: 'ButtonsIcon',
+  //   name: 'Buttons',
+  // },
+  // {
+  //   path: '/app/modals',
+  //   icon: 'ModalsIcon',
+  //   name: 'Modals',
+  // },
+  
   {
-    path: '/app/cards',
-    icon: 'CardsIcon',
-    name: 'Cards',
-  },
-  {
-    path: '/app/charts',
-    icon: 'ChartsIcon',
-    name: 'Charts',
-  },
-  {
-    path: '/app/buttons',
-    icon: 'ButtonsIcon',
-    name: 'Buttons',
-  },
-  {
-    path: '/app/modals',
+    path: '/app/my-mates',
     icon: 'ModalsIcon',
-    name: 'Modals',
+    name: 'My Mates',
   },
   {
     path: '/app/statistic',

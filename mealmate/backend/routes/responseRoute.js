@@ -129,6 +129,7 @@ router.post('/accept', async (req, res) => {
     const newBooking = new Booking({
       user_id: acceptedResponse.request_id.user_id,
       chef_id: acceptedResponse.chef_id._id,
+      request_id: requestId, // Add request_id
       date: acceptedResponse.request_id.date,
       status: 'accepted'
     });
@@ -137,7 +138,7 @@ router.post('/accept', async (req, res) => {
     // Update the request status to 'fulfilled'
     await Request.findByIdAndUpdate(requestId, { status: 'fulfilled' });
 
-    res.status(200).send("Appeal accepted, request fulfilled, and booking created.");
+    res.status(200).send("Appeal accepted");
   } catch (error) {
     res.status(500).send("Error processing acceptance: " + error.message);
   }
@@ -188,6 +189,26 @@ router.post('/accept', async (req, res) => {
 //     res.status(500).send("Error processing acceptance: " + error.message);
 //   }
 // });
+
+router.get('/my-appeals', async (req, res) => {
+  const { chef_id } = req.query;
+  try {
+    const appeals = await UserResponse.find({ chef_id, response_status: 'pending' }).populate('request_id', 'food_preference date');
+    res.json(appeals);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching your appeals' });
+  }
+});
+
+router.post('/revoke', async (req, res) => {
+  const { appealId } = req.body;
+  try {
+    await UserResponse.findByIdAndDelete(appealId);
+    res.status(200).json({ message: 'Appeal revoked successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error revoking appeal' });
+  }
+});
 
 
 

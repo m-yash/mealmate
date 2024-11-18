@@ -236,7 +236,7 @@ router.get('/all-request', async (req, res) => {
     const currentDateTime = new Date();
 
     const nearbyRequests = await Request.find({
-      status: { $ne: 'fulfilled' }, // Exclude fulfilled requests
+      status: { $nin: ['fulfilled', 'deleted'] }, // Exclude fulfilled and deleted requests
       location: {
         $geoWithin: {
           $centerSphere: [[userLng, userLat], radiusInRadians],
@@ -293,5 +293,24 @@ router.get('/all-request', async (req, res) => {
 //   }
 // });
 
+router.get('/my-requests', async (req, res) => {
+  const { email } = req.query;
+  try {
+    const user = await User.findOne({ email });
+    const requests = await Request.find({ user_id: user._id, status: { $ne: 'deleted' } });
+    res.json(requests);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching your requests' });
+  }
+});
 
+router.post('/delete', async (req, res) => {
+  const { requestId } = req.body;
+  try {
+    await Request.findByIdAndUpdate(requestId, { status: 'deleted' });
+    res.status(200).json({ message: 'Request deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting request' });
+  }
+});
 module.exports = router;
