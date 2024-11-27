@@ -16,6 +16,10 @@ const UserResponseSchema = new mongoose.Schema({
     enum: ['pending','accepted', 'rejected'],
     required: true,
   },
+  comments: {  // comments
+    type: String,
+    required: false,
+  },
   created_at: {
     type: Date,
     default: Date.now,

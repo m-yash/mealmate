@@ -4,10 +4,12 @@ const UserResponse = require('../models/UserResponses');
 const Request = require('../models/Request');
 const Booking = require('../models/Booking');
 const User = require('../models/User');
+const Review = require('../models/Review');
+
 
 // Appeal a request
 router.post('/appeal', async (req, res) => {
-  const { request_id, chef_id } = req.body;
+  const { request_id, chef_id, comments} = req.body;
   try {
     // Find the user to check their role
     const user = await User.findById(chef_id);
@@ -44,11 +46,13 @@ router.post('/appeal', async (req, res) => {
       request_id,
       chef_id,
       response_status: 'pending',
+      comments,  // Save the comments
     });
     await response.save();
 
     res.status(200).send("Request appealed successfully");
   } catch (error) {
+    console.error("Error recording appeal:", error);
     res.status(500).send("Error recording appeal: " + error.message);
   }
 });
@@ -74,35 +78,79 @@ router.get('/fetch-appeals/:requesterId', async (req, res) => {
   const requesterId = req.params.requesterId;
 
   try {
-    // Fetch all requests made by the requester
+    // Step 1: Fetch all request IDs for the requester
     const userRequests = await Request.find({ user_id: requesterId }).select('_id');
-
-    // Extract request IDs
     const requestIds = userRequests.map(request => request._id);
 
-    // Get IDs of requests with existing bookings
+    // Step 2: Filter out requests with accepted bookings
     const bookedRequestIds = await Booking.find({ user_id: requesterId })
       .select('request_id')
-      .then(bookings => bookings
-        .map(booking => booking.request_id ? booking.request_id.toString() : null)
-        .filter(id => id !== null) // Filter out any null values
-      );
+      .then(bookings => bookings.map(booking => booking.request_id?.toString()).filter(id => id));
 
-    // Filter appeals to exclude requests that have an accepted booking
-    const appeals = await UserResponse.find({
-      request_id: { $in: requestIds.filter(id => !bookedRequestIds.includes(id.toString())) }
-    })
+    const filteredRequestIds = requestIds.filter(id => !bookedRequestIds.includes(id.toString()));
+
+    // Step 3: Fetch appeals for those filtered request IDs
+    const appeals = await UserResponse.find({ request_id: { $in: filteredRequestIds } })
       .populate('chef_id', 'name') // Populate chef name
       .populate('request_id', 'food_preference date');
 
-    // If there are no appeals left for a request, you can return an empty array
-    const filteredAppeals = appeals.filter(appeal => appeal.response_status !== 'accepted');
+    // Step 4: Calculate average ratings for all chefs
+    const chefRatings = await Review.aggregate([
+      { $group: { _id: '$chef_id', averageRating: { $avg: '$rating' } } }, // Group by chef_id
+    ]);
 
-    res.status(200).json(filteredAppeals);
+    // Step 5: Create a dictionary for quick lookup
+    const chefRatingsMap = chefRatings.reduce((acc, rating) => {
+      acc[rating._id.toString()] = rating.averageRating;
+      return acc;
+    }, {});
+
+    // Step 6: Add average rating to each appeal
+    const appealsWithRatings = appeals.map(appeal => ({
+      ...appeal.toObject(),
+      chefRating: chefRatingsMap[appeal.chef_id._id.toString()] || 'No Ratings', // Default to 'No Ratings'
+    }));
+
+    // Step 7: Send the response
+    res.status(200).json(appealsWithRatings);
   } catch (error) {
     res.status(500).json({ error: "Error fetching appeals: " + error.message });
   }
 });
+
+// router.get('/fetch-appeals/:requesterId', async (req, res) => {
+//   const requesterId = req.params.requesterId;
+
+//   try {
+//     // Fetch all requests made by the requester
+//     const userRequests = await Request.find({ user_id: requesterId }).select('_id');
+
+//     // Extract request IDs
+//     const requestIds = userRequests.map(request => request._id);
+
+//     // Get IDs of requests with existing bookings
+//     const bookedRequestIds = await Booking.find({ user_id: requesterId })
+//       .select('request_id')
+//       .then(bookings => bookings
+//         .map(booking => booking.request_id ? booking.request_id.toString() : null)
+//         .filter(id => id !== null) // Filter out any null values
+//       );
+
+//     // Filter appeals to exclude requests that have an accepted booking
+//     const appeals = await UserResponse.find({
+//       request_id: { $in: requestIds.filter(id => !bookedRequestIds.includes(id.toString())) }
+//     })
+//       .populate('chef_id', 'name') // Populate chef name
+//       .populate('request_id', 'food_preference date');
+
+//     // If there are no appeals left for a request, you can return an empty array
+//     const filteredAppeals = appeals.filter(appeal => appeal.response_status !== 'accepted');
+
+//     res.status(200).json(filteredAppeals);
+//   } catch (error) {
+//     res.status(500).json({ error: "Error fetching appeals: " + error.message });
+//   }
+// });
 
 // responseRoute.js
 router.post('/accept', async (req, res) => {

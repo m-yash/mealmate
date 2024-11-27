@@ -18,10 +18,6 @@ const ReviewSchema = new mongoose.Schema({
     min: 1,
     max: 5,
   },
-  comments: {
-    type: String,
-    required: true,
-  },
   date: {
     type: Date,
     default: Date.now,

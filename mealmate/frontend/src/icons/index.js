@@ -32,10 +32,17 @@ import { ReactComponent as ChefIcon } from './chef.svg'
 
 import { ReactComponent as AcceptIcon } from './accept.svg'
 
+import { ReactComponent as DetailsIcon } from './details.svg'
+
+import { ReactComponent as RateIcon } from './rate.svg'
+
+
 export {
   RequestIcon,
   ChefIcon,
   AcceptIcon,
+  DetailsIcon,
+  RateIcon,
   
   ButtonsIcon,
   CardsIcon,
