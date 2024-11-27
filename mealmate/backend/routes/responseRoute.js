@@ -3,12 +3,22 @@ const router = express.Router();
 const UserResponse = require('../models/UserResponses');
 const Request = require('../models/Request');
 const Booking = require('../models/Booking');
-
+const User = require('../models/User');
 
 // Appeal a request
 router.post('/appeal', async (req, res) => {
   const { request_id, chef_id } = req.body;
   try {
+    // Find the user to check their role
+    const user = await User.findById(chef_id);
+    if (!user) {
+      return res.status(404).send({ message: 'User  not found.' });
+    }
+
+    // Check if the user has the 'chef' role
+    if (user.role !== 'chef') {
+      return res.status(403).send({ message: 'You must upload your food handling certificate to make an appeal.' });
+    }
     // Find the request to check the user who made it
     const request = await Request.findById(request_id); 
 

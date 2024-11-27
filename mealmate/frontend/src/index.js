@@ -25,6 +25,7 @@ import ThemedSuspense from './uicomponents/ThemedSuspense'
 import { Windmill } from '@windmill/react-ui'
 import * as serviceWorker from './serviceWorker'
 
+import { AuthProvider } from '../src/context/AuthContext';
 // if (process.env.NODE_ENV !== 'production') {
 //   const axe = require('react-axe')
 //   axe(React, ReactDOM, 1000)
@@ -32,15 +33,26 @@ import * as serviceWorker from './serviceWorker'
 
 ReactDOM.render(
   <SidebarProvider>
-    <Suspense fallback={<ThemedSuspense />}>
-      <Windmill usePreferences>
-        <App />
-      </Windmill>
-    </Suspense>
+    <AuthProvider>
+      <Suspense fallback={<ThemedSuspense />}>
+        <Windmill usePreferences>
+          <App />
+        </Windmill>
+      </Suspense>
+    </AuthProvider>
   </SidebarProvider>,
   document.getElementById('root')
 )
-
+// ReactDOM.render(
+//   <SidebarProvider>
+//       <Suspense fallback={<ThemedSuspense />}>
+//         <Windmill usePreferences>
+//           <App />
+//         </Windmill>
+//       </Suspense>
+//   </SidebarProvider>,
+//   document.getElementById('root')
+// )
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA

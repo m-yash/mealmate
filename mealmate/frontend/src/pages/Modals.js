@@ -98,8 +98,42 @@ const Modals = ({ isModalOpen, closeModal }) => {
             </Label>
           </div>
 
+          {/* Date and Time */}
+          <div className="mb-4 flex">
+            {/* Date Field */}
+            <div className="mr-4 flex-1"> {/* Add margin-right for spacing */}
+              <Label>
+                <span>When do you want your meal?</span>
+                <Input
+                  type="date"
+                  name="date"
+                  value={formData.date}
+                  onChange={handleChange}
+                  className="mt-1"
+                  required
+                  min={formattedToday}  // Set minimum date
+                  max={formattedMaxDate} // Set maximum date
+                />
+              </Label>
+            </div>
+            
+            {/* Time Field */}
+            <div className="flex-1"> {/* Flex-grow to take available space */}
+              <Label>
+                <span>Please specify time</span>
+                <Input
+                  type="time"
+                  name="time"
+                  value={formData.time}
+                  onChange={handleChange}
+                  className="mt-1"
+                  required
+                />
+              </Label>
+            </div>
+          </div>
           {/* Date */}
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <Label>
               <span>When do you want your meal?</span>
               <Input
@@ -113,10 +147,10 @@ const Modals = ({ isModalOpen, closeModal }) => {
                 max={formattedMaxDate} // Set maximum date
               />
             </Label>
-          </div>
+          </div> */}
           
           {/* Time */}
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <Label>
               <span>Time</span>
               <Input
@@ -128,24 +162,45 @@ const Modals = ({ isModalOpen, closeModal }) => {
                 required
               />
             </Label>
-          </div>
+          </div> */}
 
-          {/* Dietary Preference */}
-          <div className="mb-4">
-            <Label>
-              <span>Dietary Preference (optional)</span>
-              <Select
-                name="dietary_preference"
-                value={formData.dietary_preference}
-                onChange={handleChange}
-                className="mt-1"
-              >
-                <option value="">Select...</option>
-                <option value="Vegetarian">Vegetarian</option>
-                <option value="Non-Vegetarian">Non-Vegetarian</option>
-                <option value="Vegan">Vegan</option>
-              </Select>
-            </Label>
+          {/* Dietary Preference and Spice Level */}
+          <div className="mb-4 flex">
+            {/* Dietary Preference Field */}
+            <div className="mr-4 flex-1"> {/* Add margin-right for spacing */}
+              <Label>
+                <span>Dietary Preference (optional)</span>
+                <Select
+                  name="dietary_preference"
+                  value={formData.dietary_preference}
+                  onChange={handleChange}
+                  className="mt-1"
+                >
+                  <option value="">Select...</option>
+                  <option value="Vegetarian">Vegetarian</option>
+                  <option value="Non-Vegetarian">Non-Vegetarian</option>
+                  <option value="Vegan">Vegan</option>
+                </Select>
+              </Label>
+            </div>
+            
+            {/* Spice Level Field */}
+            <div className="flex-1"> {/* Flex-grow to take available space */}
+              <Label>
+                <span>Spice Level (optional)</span>
+                <Select
+                  name="spice_level"
+                  value={formData.spice_level}
+                  onChange={handleChange}
+                  className="mt-1"
+                >
+                  <option value="">Select...</option>
+                  <option value="Mild Spicy">Mild</option>
+                  <option value="Medium Spicy">Medium</option>
+                  <option value="Extreme Spicy">Extreme</option>
+                </Select>
+              </Label>
+            </div>
           </div>
 
           {/* Allergies */}
@@ -198,38 +253,21 @@ const Modals = ({ isModalOpen, closeModal }) => {
             </Label>
           </div>
 
-          {/* Spice Level */}
-          <div className="mb-4">
-            <Label>
-              <span>Spice Level (optional)</span>
-              <Select
-                name="spice_level"
-                value={formData.spice_level}
-                onChange={handleChange}
-                className="mt-1"
-              >
-                <option value="">Select...</option>
-                <option value="Mild Spicy">Mild</option>
-                <option value="Medium Spicy">Medium</option>
-                <option value="Extreme Spicy">Extreme</option>
-              </Select>
-            </Label>
-          </div>
 
           {/* Budget */}
-          {/* <div className="mb-4">
+          <div className="mb-4">
             <Label>
-              <span>Budget</span>
+              <span>How much are you willing to spend?</span>
               <Input
                 type="number"
                 name="budget"
                 value={formData.budget}
                 onChange={handleChange}
                 className="mt-1"
-                placeholder="Specify your budget in USD"
+                placeholder="Specify your budget in CAD"
               />
             </Label>
-          </div> */}
+          </div>
         </form>
       </ModalBody>
       <ModalFooter>

@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import SectionTitle from '../uicomponents/Typography/SectionTitle'
 import PageTitle from '../uicomponents/Typography/PageTitle'
 
+import { ForbiddenIcon } from '../icons';
 
 function MyAppeals() {
   const [page, setPage] = useState(1);
@@ -47,37 +48,48 @@ function MyAppeals() {
       <PageTitle>Appeals</PageTitle>
       <SectionTitle>Appeals made by you</SectionTitle>
       <TableContainer className="mb-8">
-        <Table>
-          <TableHeader>
-            <tr>
-              <TableCell>Food Request</TableCell>
-              <TableCell>Date</TableCell>
-              <TableCell>Actions</TableCell>
-            </tr>
-          </TableHeader>
-          <TableBody>
-            {data.slice((page - 1) * resultsPerPage, page * resultsPerPage).map((appeal, i) => (
-              <TableRow key={i}>
-                <TableCell>
-                  <span className="text-sm">
-                    {appeal.request_id.food_preference}
-                  </span>
-                  </TableCell>
-                <TableCell>
-                  <span className="text-sm">
-                    {new Date(appeal.request_id.date).toLocaleDateString()}
-                  </span>  
-                  </TableCell>
-                <TableCell>
-                  <Button layout="link" size="icon" aria-label="Revoke" onClick={() => handleRevokeAppeal(appeal._id)}>
-                    <TrashIcon className="w-5 h-5" aria-hidden="true" />
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <Pagination totalResults={totalResults} resultsPerPage={resultsPerPage} onChange={setPage} />
+        {data.length === 0 ? (
+          <div className="flex flex-col items-center">
+            <ForbiddenIcon className="w-12 h-12 mt-4 text-gray-400" aria-hidden="true" />
+            <p className="text-gray-700 dark:text-gray-300 mt-2">
+              You have not made any appeals yet.
+            </p>
+          </div>
+        ) : (
+          <>
+            <Table>
+              <TableHeader>
+                <tr>
+                  <TableCell>Food Request</TableCell>
+                  <TableCell>Date</TableCell>
+                  <TableCell>Actions</TableCell>
+                </tr>
+              </TableHeader>
+              <TableBody>
+                {data.slice((page - 1) * resultsPerPage, page * resultsPerPage).map((appeal, i) => (
+                  <TableRow key={i}>
+                    <TableCell>
+                      <span className="text-sm">
+                        {appeal.request_id.food_preference}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <span className="text-sm">
+                        {new Date(appeal.request_id.date).toLocaleDateString()}
+                      </span>  
+                    </TableCell>
+                    <TableCell>
+                      <Button layout="link" size="icon" aria-label="Revoke" onClick={() => handleRevokeAppeal(appeal._id)}>
+                        <TrashIcon className="w-5 h-5" aria-hidden="true" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            <Pagination totalResults={totalResults} resultsPerPage={resultsPerPage} onChange={setPage} />
+          </>
+        )}
       </TableContainer>
     </>
   );

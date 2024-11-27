@@ -229,6 +229,7 @@ router.get('/all-request', async (req, res) => {
       return res.status(404).json({ message: 'User location not found' });
     }
 
+    const userId = user._id; // Get the user's ID
     const [userLng, userLat] = user.location.coordinates;
     const radiusInRadians = 3 / 6378.1;
 
@@ -250,7 +251,8 @@ router.get('/all-request', async (req, res) => {
           date: currentDateTime,
           time: { $gte: currentDateTime.toTimeString().slice(0, 5) }, // Compare time as HH:MM
         }
-      ]
+      ],
+      user_id: { $ne: userId } // Exclude requests made by the logged-in user
     }).populate('user_id', 'name');
 
     res.json(nearbyRequests);

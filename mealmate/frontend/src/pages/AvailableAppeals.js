@@ -22,6 +22,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import PageTitle from '../uicomponents/Typography/PageTitle'
 import SectionTitle from '../uicomponents/Typography/SectionTitle'
 
+import { ForbiddenIcon } from '../icons';
+
 const RequestsWithAppeals = () => {
   const [appeals, setAppeals] = useState({});
   const [paginationState, setPaginationState] = useState({});
@@ -287,62 +289,71 @@ const RequestsWithAppeals = () => {
       <ToastContainer />
       <PageTitle>Appeals</PageTitle>
       <SectionTitle>Appeals for Your Requests</SectionTitle>
-      
-      {Object.keys(appeals).map((requestId) => {
-        // Ensure pagination state is initialized
-        const pagination = paginationState[requestId] || { page: 1, totalResults: 0 };
-        const currentPageData = appeals[requestId].slice(
-          (pagination.page - 1) * resultsPerPage,
-          pagination.page * resultsPerPage
-        );
 
-        return (
-          <div key={requestId} className="mb-6">
-            <p className="mb-4 font-semibold text-gray-600 dark:text-gray-300">
-              Request for {appeals[requestId][0].request_id.food_preference} on {new Date(appeals[requestId][0].request_id.date).toLocaleDateString()}
+      {Object.keys(appeals).length === 0 ? (
+        <div className="flex flex-col items-center">
+          <ForbiddenIcon className="w-12 h-12 mt-4 text-gray-400" aria-hidden="true" />
+          <p className="text-gray-700 dark:text-gray-300 mt-2">
+            No appeals available to show.
+          </p>
+        </div>
+      ) : (
+        Object.keys(appeals).map((requestId) => {
+          // Ensure pagination state is initialized
+          const pagination = paginationState[requestId] || { page: 1, totalResults: 0 };
+          const currentPageData = appeals[requestId].slice(
+            (pagination.page - 1) * resultsPerPage,
+            pagination.page * resultsPerPage
+          );
+
+          return (
+            <div key={requestId} className="mb-6">
+              <p className="mb-4 font-semibold text-gray-600 dark:text-gray-300">
+                Request for {appeals[requestId][0].request_id.food_preference} on {new Date(appeals[requestId][0].request_id.date).toLocaleDateString()}
               </p>
-            <TableContainer className="mb-8">
-              <Table>
-                <TableHeader>
-                  <tr>
-                    <TableCell>Chef</TableCell>
-                    <TableCell>Response Status</TableCell>
-                    <TableCell>Actions</TableCell>
-                  </tr>
-                </TableHeader>
-                <TableBody>
-                  {currentPageData.map((appeal) => (
-                    <TableRow key={appeal._id}>
-                      <TableCell>
-                        <span className="text-sm">
-                          {appeal.chef_id.name}
-                        </span>
-                      </TableCell>
-                      <TableCell>
-                        <span className="text-sm">
-                          {appeal.response_status}
-                        </span>
-                      </TableCell>
-                      <TableCell>
-                        <Button size="small" onClick={() => handleResponse(appeal._id, 'accept')}>Accept</Button>
-                        {/* <Button onClick={() => handleResponse(appeal._id, 'reject')} layout="link">Reject</Button> */}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-              <TableFooter>
-                <Pagination
-                  totalResults={pagination.totalResults}
-                  resultsPerPage={resultsPerPage}
-                  onChange={(p) => onPageChange(requestId, p)}
-                  label={`Pagination for ${requestId}`}
-                />
-              </TableFooter>
-            </TableContainer>
-          </div>
-        );
-      })}
+              <TableContainer className="mb-8">
+                <Table>
+                  <TableHeader>
+                    <tr>
+                      <TableCell>Chef</TableCell>
+                      <TableCell>Response Status</TableCell>
+                      <TableCell>Actions</TableCell>
+                    </tr>
+                  </TableHeader>
+                  <TableBody>
+                    {currentPageData.map((appeal) => (
+                      <TableRow key={appeal._id}>
+                        <TableCell>
+                          <span className="text-sm">
+                            {appeal.chef_id.name}
+                          </span>
+                        </TableCell>
+                        <TableCell>
+                          <span className="text-sm">
+                            {appeal.response_status}
+                          </span>
+                        </TableCell>
+                        <TableCell>
+                          <Button size="small" onClick={() => handleResponse(appeal._id, 'accept')}>Accept</Button>
+                          {/* <Button onClick={() => handleResponse(appeal._id, 'reject')} layout="link">Reject</Button> */}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+                <TableFooter>
+                  <Pagination
+                    totalResults={pagination.totalResults}
+                    resultsPerPage={resultsPerPage}
+                    onChange={(p) => onPageChange(requestId, p)}
+                    label={`Pagination for ${requestId}`}
+                  />
+                </TableFooter>
+              </TableContainer>
+            </div>
+          );
+        })
+      )}
     </div>
   );
 };

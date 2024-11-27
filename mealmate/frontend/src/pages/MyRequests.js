@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import PageTitle from '../uicomponents/Typography/PageTitle'
 import SectionTitle from '../uicomponents/Typography/SectionTitle'
 
+import { ForbiddenIcon } from '../icons';
 
 
 function MyRequests() {
@@ -48,37 +49,56 @@ function MyRequests() {
       <PageTitle>Requests</PageTitle>
       <SectionTitle>Your Requests</SectionTitle>
       <TableContainer className="mb-8">
-        <Table>
-          <TableHeader>
-            <tr>
-              <TableCell>Food Request</TableCell>
-              <TableCell>Date</TableCell>
-              <TableCell>Actions</TableCell>
-            </tr>
-          </TableHeader>
-          <TableBody>
-            {data.slice((page - 1) * resultsPerPage, page * resultsPerPage).map((request, i) => (
-              <TableRow key={i}>
-                <TableCell>
-                <span className="text-sm">
-                  {request.food_preference}
-                </span>
-                  </TableCell>
-                <TableCell>
-                <span className="text-sm">
-                  {new Date(request.date).toLocaleDateString()}
-                </span>
-                </TableCell>
-                <TableCell>
-                  <Button layout="link" size="icon" aria-label="Delete" onClick={() => handleDeleteRequest(request._id)}>
-                    <TrashIcon className="w-5 h-5" aria-hidden="true" />
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <Pagination totalResults={totalResults} resultsPerPage={resultsPerPage} onChange={setPage} />
+        {data.length === 0 ? (
+          <div className="flex flex-col items-center">
+            <ForbiddenIcon className="w-12 h-12 mt-4 text-gray-400" aria-hidden="true" />
+            <p className="text-gray-700 dark:text-gray-300 mt-2">
+              You have not made any requests yet.
+            </p>
+          </div>
+        ) : (
+          <>
+            <Table>
+              <TableHeader>
+                <tr>
+                  <TableCell>Food Request</TableCell>
+                  <TableCell>Date</TableCell>
+                  <TableCell>Actions</TableCell>
+                </tr>
+              </TableHeader>
+              <TableBody>
+                {data.slice((page - 1) * resultsPerPage, page * resultsPerPage).map((request, i) => (
+                  <TableRow key={i}>
+                    <TableCell>
+                      <span className="text-sm"
+                      
+                      style={{
+                        display: 'block',
+                        maxWidth: '700px', // Set a maximum width for the cell
+            overflowWrap: 'break-word', // Allows long words to break and wrap onto the next line
+            wordWrap: 'break-word', // Older browsers support
+            whiteSpace: 'normal', 
+                      }}>
+                        {request.food_preference}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <span className="text-sm">
+                        {new Date(request.date).toLocaleDateString()}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <Button layout="link" size="icon" aria-label="Delete" onClick={() => handleDeleteRequest(request._id)}>
+                        <TrashIcon className="w-5 h-5" aria-hidden="true" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            <Pagination totalResults={totalResults} resultsPerPage={resultsPerPage} onChange={setPage} />
+          </>
+        )}
       </TableContainer>
     </>
   );

@@ -13,6 +13,8 @@ import response from '../utils/demo/tableData'
 
 import SectionTitle from '../uicomponents/Typography/SectionTitle'
 
+import { ForbiddenIcon } from '../icons';
+
 import {
   TableBody,
   TableContainer,
@@ -52,32 +54,13 @@ function Dashboard() {
       const email = localStorage.getItem('email');
       const response = await fetch(`/request/all-request?email=${email}`);
       const requests = await response.json();
-      
-      if (requests.length === 0) {
-        // Handle the case when no requests are found
-        setData([]);
-        setTotalResults(0);
-        toast.info('No available requests at this time.');
-        return;
-      }
-  
+    
       setData(requests);
       setTotalResults(requests.length);
     } catch (error) {
       console.error("Error fetching requests:", error);
     }
   };
-  // const fetchRequests = async () => {
-  //   try {
-  //     const email = localStorage.getItem('email');
-  //     const response = await fetch(`/request/all-request?email=${email}`);
-  //     const requests = await response.json();
-  //     setData(requests);
-  //     setTotalResults(requests.length);
-  //   } catch (error) {
-  //     console.error("Error fetching requests:", error);
-  //   }
-  // };
 
   useEffect(() => {
     fetchRequests();
@@ -94,7 +77,7 @@ function Dashboard() {
       });
       toast.success('Request appealed successfully!');
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Error appealing the request');
+      toast.info(error.response?.data?.message || 'Error appealing the request');
     }
   };
 
@@ -119,83 +102,96 @@ function Dashboard() {
 
   return (
     <>
+    
       <ToastContainer />
       <PageTitle>Requests</PageTitle>
       <SectionTitle>Available Requests Near You</SectionTitle>
       <TableContainer className="mb-8">
-        <Table>
-          <TableHeader>
-            <tr>
-              <TableCell>Name</TableCell>
-              <TableCell>Food Request</TableCell>
-              <TableCell>Date</TableCell>
-              <TableCell>Requirements</TableCell>
-              <TableCell>Willing to pay (USD)</TableCell>
-              {/* <TableCell>Status</TableCell> */}
-              <TableCell>Actions</TableCell>
-            </tr>
-          </TableHeader>
-          <TableBody>
-            {data.slice((page - 1) * resultsPerPage, page * resultsPerPage).map((request, i) => (
-              <TableRow key={i}>
-                <TableCell>
-                  <span className="text-sm">
-                    {request.user_id ? request.user_id.name : 'Unknown User'}
-                  </span>
-                </TableCell>
-                <TableCell>
-                  <span className="text-sm">{request.food_preference}</span>
-                </TableCell>
-                <TableCell>
-                  <span className="text-sm">
-                  {new Date(request.date).toLocaleDateString('en-GB', { timeZone: 'UTC' })} at {request.time}
-                    {/* {new Date(request.date).toLocaleDateString()} at {request.time} */}
-                  </span>
-                </TableCell>
-                <TableCell>
-                  <div className="flex flex-wrap gap-2">
-                    <Badge type={request.dietary_preference === 'Non-Vegetarian' ? 'danger' : 'success'}>
-                      {request.dietary_preference}
-                    </Badge>
-                    {request.allergies && request.allergies.map((allergy, index) => (
-                      <Badge key={index} type="warning">{allergy.replace(/_/g, ' ')}</Badge>
-                    ))}
-                    <Badge type="neutral">{request.spice_level}</Badge>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <span className="text-sm">${request.budget || ' N/A'}</span>
-                </TableCell>
-                {/* <TableCell>
-                  <Badge type={request.status === 'fulfilled' ? 'success' : request.status === 'cancelled' ? 'danger' : 'warning'}>
-                    {request.status}
-                  </Badge>
-                </TableCell> */}
-                <TableCell>
-                  {/* <Button layout="link" size="small">
-                    Small
-                  </Button> */}
-                  <div className="flex items-center space-x-4">
-                    <Button layout="link" size="icon" aria-label="Appeal" onClick={() => handleAppeal(request._id)}>
-                      <AcceptIcon className="w-5 h-5" aria-hidden="true" />
-                    </Button>
-                    <Button layout="link" size="icon" aria-label="Reject" onClick={() => handleReject(request._id)}>
-                      <TrashIcon className="w-5 h-5" aria-hidden="true" />
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <TableFooter>
-          <Pagination
-            totalResults={totalResults}
-            resultsPerPage={resultsPerPage}
-            onChange={onPageChange}
-            label="Table navigation"
-          />
-        </TableFooter>
+        {data.length === 0 ? (
+          <div className="flex flex-col items-center">
+            <ForbiddenIcon className="w-12 h-12 mt-4 text-gray-400" aria-hidden="true" />
+            <p className="text-gray-700 dark:text-gray-300 mt-2">
+              No requests available near you at this time.
+            </p>
+          </div>
+        ) : (
+          <>
+            <Table>
+              <TableHeader>
+                <tr>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Food Request</TableCell>
+                  <TableCell>Date</TableCell>
+                  <TableCell>Preference</TableCell>
+                  <TableCell>Willing to pay (USD)</TableCell>
+                  <TableCell>Actions</TableCell>
+                </tr>
+              </TableHeader>
+              <TableBody>
+                {data.slice((page - 1) * resultsPerPage, page * resultsPerPage).map((request, i) => (
+                  <TableRow key={i}>
+                    <TableCell>
+                      <span className="text-sm">
+                        {request.user_id ? request.user_id.name : 'Unknown User'}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <span className="text-sm"
+                      style={{
+                        display: 'block',
+                        maxWidth: '700px', // Set a maximum width for the cell
+            overflowWrap: 'break-word', // Allows long words to break and wrap onto the next line
+            wordWrap: 'break-word', // Older browsers support
+            whiteSpace: 'normal', 
+                      }}
+                      title={request.food_preference}
+                      >{request.food_preference}</span>
+                    </TableCell>
+                    <TableCell>
+                      <span className="text-sm">
+                        {new Date(request.date).toLocaleDateString('en-GB', { timeZone: 'UTC' })} at {request.time}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-wrap gap-2">
+                        {request.dietary_preference && (
+                          <Badge type={request.dietary_preference === 'Non-Vegetarian' ? 'danger' : 'success'}>
+                            {request.dietary_preference}
+                          </Badge>
+                        )}
+                        {request.allergies && request.allergies.length > 0 && request.allergies.map((allergy, index) => (
+                          <Badge key={index} type="warning">{allergy.replace(/_/g, '')}</Badge>
+                        ))}
+                        {request.spice_level && (
+                          <Badge type="neutral">{request.spice_level}</Badge>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <span className="text-sm">${request.budget || ' N/A'}</span>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center space-x-4">
+                        <Button layout="link" size="icon" aria-label="Appeal" onClick={() => handleAppeal(request._id)}>
+                          <AcceptIcon className="w-5 h-5" aria-hidden="true" />
+                        </Button>
+                
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            <TableFooter>
+              <Pagination
+                totalResults={totalResults}
+                resultsPerPage={resultsPerPage}
+                onChange={onPageChange}
+                label="Table navigation"
+              />
+            </TableFooter>
+          </>
+        )}
       </TableContainer>
     </>
   );

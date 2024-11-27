@@ -72,30 +72,30 @@ const routes = [
     name: 'Settings',
     routes: [
       // submenu
-      {
-        path: '/app/update-profile',
-        name: 'Update Profile',
-      },
+      // {
+      //   path: '/app/update-profile',
+      //   name: 'Update Profile',
+      // },
       
-      {
-        path: '/login',
-        name: 'Login',
-      },
-      {
-        path: '/create-account',
-        name: 'Create account',
-      },
+      // {
+      //   path: '/login',
+      //   name: 'Login',
+      // },
+      // {
+      //   path: '/create-account',
+      //   name: 'Create account',
+      // },
       {
         path: '/forgot-password',
         name: 'Forgot password',
       },
-      {
-        path: '/app/404',
-        name: '404',
-      },
+      // {
+      //   path: '/app/404',
+      //   name: '404',
+      // },
       {
         path: '/app/blank',
-        name: 'Blank',
+        name: 'Help',
       },
 
       
